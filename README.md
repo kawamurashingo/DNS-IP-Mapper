@@ -11,7 +11,7 @@ This script assigns unused IP addresses from specified CIDR subnets to a list of
     web03.example.com
     ```
 
-2. **Generate IPs**: Generates a list of IP addresses for the given CIDR subnet. Currently, it supports `/2[1-9]` CIDR notation. 
+2. **Generate IPs**: Generates a list of IP addresses for the given CIDR subnet. Currently, it supports `/2[2-4]` CIDR notation. 
 
 3. **Check Unused IPs**: For each FQDN, the script attempts to find an unused IP by checking DNS and pinging the IP.
 
@@ -44,7 +44,7 @@ To use the script, you'll need to provide a list of FQDNs and a list of CIDR sub
    **Example:**
    ```bash
    export subnets="192.168.1.0/24
-   192.168.2.0/24"
+   192.168.2.0/23"
    ```
 
    This would represent the CIDR subnets:
@@ -69,5 +69,5 @@ web02.example.com,192.168.1.2
 ## Notes
 
 - The script uses both `host` and `ping` commands to verify if an IP address is unused. Ensure that these commands are available on your system.
-- The script currently supports `/2[1-9]` CIDR notations. If you need more CIDR notations, you can extend the `generate_ips` function.
+- The script currently supports `/2[2-4]` CIDR notations. If you need more CIDR notations, you can extend the `generate_ips` function.
 
