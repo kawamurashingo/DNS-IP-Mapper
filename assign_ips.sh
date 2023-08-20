@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Check if required commands are available
+for cmd in host ping; do
+    if ! command -v $cmd &> /dev/null; then
+        echo "Error: '$cmd' command is not found. Please install it before running this script."
+        exit 1
+    fi
+done
+
 # Function to expand fqdn
 expand_fqdn() {
     local input="$1"
@@ -61,6 +69,18 @@ generate_ips() {
             ;;
     esac
 }
+
+# Validate input fqdns format
+if [[ ! "$fqdns" =~ ^[a-zA-Z0-9\.-\[\]]+$ ]]; then
+    echo "Error: Invalid fqdns format."
+    exit 1
+fi
+
+# Validate input subnets format
+if [[ ! "$subnets" =~ ^[0-9\.\/]+$ ]]; then
+    echo "Error: Invalid subnets format."
+    exit 1
+fi
 
 # Expand and remove duplicate FQDNs
 expanded_fqdns=$(expand_fqdn "$fqdns")
