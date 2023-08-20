@@ -56,6 +56,7 @@ To use the script, you'll need to provide a list of FQDNs and a list of CIDR sub
 5. Execute the script:
 
 ```bash
+chmod 655 ./assign_ips.sh
 ./assign_ips.sh
 ```
 
