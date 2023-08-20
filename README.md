@@ -51,6 +51,23 @@ Run the script using the following command:
 
 This will attempt to assign IP addresses starting from `.10` to `.100` within the specified subnets to the FQDNs.
 
+### Output
+
+The script will display the assigned IP addresses for each FQDN in the following format:
+
+```
+<fqdn>,<assigned_ip>
+```
+
+For example, the output might look something like:
+
+```
+db01.example.com,192.168.1.10
+db02.example.com,192.168.1.11
+web01.example.com,192.168.1.12
+web02.example.com,192.168.1.13
+```
+
 ## Note
 
 - Currently, the script only supports CIDR values of 24, 23, and 22.
