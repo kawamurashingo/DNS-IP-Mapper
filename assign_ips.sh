@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Default values
+DEFAULT_IP_START=1
+DEFAULT_IP_END=240
+
 # Function to expand fqdn
 expand_fqdn() {
     local input="$1"
@@ -27,8 +31,9 @@ expand_fqdn() {
 # Function to generate IPs for given subnet
 generate_ips() {
     local subnet=$1
-    local ip_start=${2:-1}          # default start range is 1
-    local ip_end=${3:-240}          # default end range is 240
+    local subnet=$1
+    local ip_start=${2:-$IP_START}  # Use global IP_START
+    local ip_end=${3:-$IP_END}      # Use global IP_END
 
     IFS='/' read -ra ADDR <<< "$subnet"
     local ip_parts=($(echo ${ADDR[0]} | awk -F. '{print $1" "$2" "$3" "$4}'))
@@ -61,6 +66,41 @@ generate_ips() {
             ;;
     esac
 }
+
+# Parse command-line options
+while getopts "s:e:f:n:" opt; do
+    case $opt in
+        s)
+            IP_START=$OPTARG
+            ;;
+        e)
+            IP_END=$OPTARG
+            ;;
+        f)
+            FQDN_FILE=$OPTARG
+            ;;
+        n)
+            SUBNET_FILE=$OPTARG
+            ;;
+        *)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+    esac
+done
+
+# Use default values if not provided
+IP_START=${IP_START:-$DEFAULT_IP_START}
+IP_END=${IP_END:-$DEFAULT_IP_END}
+
+# Read FQDNs and subnets from provided files
+if [[ -z "$FQDN_FILE" || -z "$SUBNET_FILE" ]]; then
+    echo "Both FQDN and subnet files must be provided!"
+    exit 1
+fi
+
+fqdns=$(cat "$FQDN_FILE")
+subnets=$(cat "$SUBNET_FILE")
 
 # Expand and remove duplicate FQDNs
 expanded_fqdns=$(expand_fqdn "$fqdns")
