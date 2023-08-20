@@ -90,7 +90,7 @@ while IFS= read -r fqdn; do
 
                 # If the background process was successful
                 if [ $? -eq 0 ]; then
-                    echo "insert,aptr,$fqdn,$ip,3600"
+                    echo "$fqdn,$ip"
                     used_ips[$ip]=1       # Mark this IP address as used
                     assigned_fqdns[$fqdn]=1 # Mark this FQDN as assigned
                     break
