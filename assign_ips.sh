@@ -33,13 +33,29 @@ expand_fqdn() {
 
 
 # Function to generate IPs for given subnet
+#!/bin/bash
+
+# Check if required commands are available
+for cmd in host ping; do
+    if ! command -v $cmd &> /dev/null; then
+        echo "Error: '$cmd' command is not found. Please install it before running this script."
+        exit 1
+    fi
+done
+
+# Function to expand fqdn
+expand_fqdn() {
+    # ... (previous content)
+}
+
+# Function to generate IPs for given subnet
 generate_ips() {
     local subnet=$1
-#    echo "Debug: Processing subnet: $subnet" >&2  # ????????????
     IFS='/' read -ra ADDR <<< "$subnet"
     local ip_parts=($(echo ${ADDR[0]} | awk -F. '{print $1" "$2" "$3" "$4}'))
     local cidr=${ADDR[1]}
     local ip_end=240 # ip range 1-240 
+
     case $cidr in
         24)
             for i in $(seq 1 $ip_end); do
@@ -60,12 +76,18 @@ generate_ips() {
                 done
             done
             ;;
-        
-        # CIDR 21 20 ...
-        #
-
+        21)
+            for third in $(seq ${ip_parts[2]} $((${ip_parts[2]}+7))); do
+                for i in $(seq 1 $ip_end); do
+                    echo "${ip_parts[0]}.${ip_parts[1]}.$third.$i"
+                done
+            done
+            ;;
+        25|26|27|28|29)
+            echo "CIDR $cidr is currently not supported for generating IPs in this script."
+            ;;
         *)
-            echo "CIDR $cidr is not currently supported."
+            echo "Invalid CIDR notation $cidr."
             ;;
     esac
 }
