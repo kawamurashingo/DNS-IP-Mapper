@@ -27,7 +27,7 @@ To use the script, you'll need to provide a list of FQDNs and a list of CIDR sub
 
    **Example:**
    ```bash
-   fqdns="web[01-03].example.com
+   export fqdns="web[01-03].example.com
    db01.example.com
    db02.example.com"
    ```
@@ -43,7 +43,7 @@ To use the script, you'll need to provide a list of FQDNs and a list of CIDR sub
 
    **Example:**
    ```bash
-   subnets="192.168.1.0/24
+   export subnets="192.168.1.0/24
    192.168.2.0/24"
    ```
 
