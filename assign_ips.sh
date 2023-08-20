@@ -1,17 +1,5 @@
 #!/bin/bash
 
-# Check if required commands are available
-for cmd in host ping; do
-    if ! command -v $cmd &> /dev/null; then
-        echo "Error: '$cmd' command is not found. Please install it before running this script."
-        exit 1
-    fi
-done
-
-# Set the IP range start and end values (default is 1 and 240 respectively)
-IP_RANGE_START=${IP_RANGE_START:-1}
-IP_RANGE_END=${IP_RANGE_END:-240}
-
 # Function to expand fqdn
 expand_fqdn() {
     local input="$1"
@@ -35,61 +23,44 @@ expand_fqdn() {
     echo -e "$final_output"
 }
 
+
 # Function to generate IPs for given subnet
 generate_ips() {
     local subnet=$1
+    local ip_start=${2:-1}          # default start range is 1
+    local ip_end=${3:-240}          # default end range is 240
+
     IFS='/' read -ra ADDR <<< "$subnet"
     local ip_parts=($(echo ${ADDR[0]} | awk -F. '{print $1" "$2" "$3" "$4}'))
-    local ip_start=$IP_RANGE_START
-    local ip_end=$IP_RANGE_END
+    local cidr=${ADDR[1]}
 
     case $cidr in
         24)
-            for i in $(seq 1 $ip_end); do
+            for i in $(seq $ip_start $ip_end); do
                 echo "${ip_parts[0]}.${ip_parts[1]}.${ip_parts[2]}.$i"
             done
             ;;
         23)
             for third in $(seq ${ip_parts[2]} $((${ip_parts[2]}+1))); do
-                for i in $(seq 1 $ip_end); do
+                for i in $(seq $ip_start $ip_end); do
                     echo "${ip_parts[0]}.${ip_parts[1]}.$third.$i"
                 done
             done
             ;;
         22)
             for third in $(seq ${ip_parts[2]} $((${ip_parts[2]}+3))); do
-                for i in $(seq 1 $ip_end); do
+                for i in $(seq $ip_start $ip_end); do
                     echo "${ip_parts[0]}.${ip_parts[1]}.$third.$i"
                 done
             done
             ;;
-        21)
-            for third in $(seq ${ip_parts[2]} $((${ip_parts[2]}+7))); do
-                for i in $(seq 1 $ip_end); do
-                    echo "${ip_parts[0]}.${ip_parts[1]}.$third.$i"
-                done
-            done
-            ;;
-        25|26|27|28|29)
-            echo "CIDR $cidr is currently not supported for generating IPs in this script."
-            ;;
+        # CIDR 21 20 ...
+        #
         *)
-            echo "Invalid CIDR notation $cidr."
+            echo "CIDR $cidr is not currently supported."
             ;;
     esac
 }
-
-# Validate input fqdns format
-if [[ ! "$fqdns" =~ ^[a-zA-Z0-9\.-\[\]]+$ ]]; then
-    echo "Error: Invalid fqdns format."
-    exit 1
-fi
-
-# Validate input subnets format
-if [[ ! "$subnets" =~ ^[0-9\.\/]+$ ]]; then
-    echo "Error: Invalid subnets format."
-    exit 1
-fi
 
 # Expand and remove duplicate FQDNs
 expanded_fqdns=$(expand_fqdn "$fqdns")
@@ -119,7 +90,7 @@ while IFS= read -r fqdn; do
 
                 # If the background process was successful
                 if [ $? -eq 0 ]; then
-                    echo "$fqdn,$ip"
+                    echo "insert,aptr,$fqdn,$ip,3600"
                     used_ips[$ip]=1       # Mark this IP address as used
                     assigned_fqdns[$fqdn]=1 # Mark this FQDN as assigned
                     break
