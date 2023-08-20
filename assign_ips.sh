@@ -8,6 +8,10 @@ for cmd in host ping; do
     fi
 done
 
+# Set the IP range start and end values (default is 1 and 240 respectively)
+IP_RANGE_START=${IP_RANGE_START:-1}
+IP_RANGE_END=${IP_RANGE_END:-240}
+
 # Function to expand fqdn
 expand_fqdn() {
     local input="$1"
@@ -31,30 +35,13 @@ expand_fqdn() {
     echo -e "$final_output"
 }
 
-
-# Function to generate IPs for given subnet
-#!/bin/bash
-
-# Check if required commands are available
-for cmd in host ping; do
-    if ! command -v $cmd &> /dev/null; then
-        echo "Error: '$cmd' command is not found. Please install it before running this script."
-        exit 1
-    fi
-done
-
-# Function to expand fqdn
-expand_fqdn() {
-    # ... (previous content)
-}
-
 # Function to generate IPs for given subnet
 generate_ips() {
     local subnet=$1
     IFS='/' read -ra ADDR <<< "$subnet"
     local ip_parts=($(echo ${ADDR[0]} | awk -F. '{print $1" "$2" "$3" "$4}'))
-    local cidr=${ADDR[1]}
-    local ip_end=240 # ip range 1-240 
+    local ip_start=$IP_RANGE_START
+    local ip_end=$IP_RANGE_END
 
     case $cidr in
         24)
