@@ -49,7 +49,7 @@ To use the script, you'll need to provide a list of FQDNs and a list of CIDR sub
 
    This would represent the CIDR subnets:
    - 192.168.1.0/24
-   - 192.168.2.0/24
+   - 192.168.2.0/23
 
 4. Save the changes and close the text editor.
 
