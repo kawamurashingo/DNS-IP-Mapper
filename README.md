@@ -11,7 +11,7 @@ This script assigns unused IP addresses from specified CIDR subnets to a list of
     web03.example.com
     ```
 
-2. **Generate IPs**: Generates a list of IP addresses for the given CIDR subnet. Currently, it supports `/24`, `/23`, and `/22` CIDR notation. 
+2. **Generate IPs**: Generates a list of IP addresses for the given CIDR subnet. Currently, it supports `/2[9-1]` CIDR notation. 
 
 3. **Check Unused IPs**: For each FQDN, the script attempts to find an unused IP by checking DNS and pinging the IP.
 
