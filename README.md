@@ -68,6 +68,14 @@ web01.example.com,192.168.1.12
 web02.example.com,192.168.1.13
 ```
 
+### IP Address Assignment Criteria
+
+The script determines the availability of an IP address based on two checks:
+1. **DNS Check**: The script checks if there's already a DNS record for the IP address using the `host` command. 
+2. **Ping Check**: The script then checks if the IP address responds to a ping.
+
+An IP address is considered available for assignment if **both** checks fail, i.e., if there's no DNS record for the IP and it doesn't respond to a ping.
+
 ## Note
 
 - Currently, the script only supports CIDR values of 24, 23, and 22.
