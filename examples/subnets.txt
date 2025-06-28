@@ -1,0 +1,14 @@
+# Example subnet file
+# Lines starting with # are comments and will be ignored
+
+# Production network
+192.168.1.0/24
+
+# Development network
+192.168.2.0/24
+
+# Staging network
+10.0.1.0/24
+
+# DMZ network
+172.16.1.0/23

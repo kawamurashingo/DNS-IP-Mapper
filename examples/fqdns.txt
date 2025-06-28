@@ -1,0 +1,20 @@
+# Example FQDN file
+# Lines starting with # are comments and will be ignored
+
+# Database servers
+db01.example.com
+db02.example.com
+db03.example.com
+
+# Web servers with range expansion
+web0[1-5].example.com
+
+# Application servers
+app[10-15].example.com
+
+# Load balancers
+lb01.example.com
+lb02.example.com
+
+# Monitoring servers
+monitor[1-2].example.com
